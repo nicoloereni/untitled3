@@ -8,9 +8,7 @@ class Cookie
     @agent = Mechanize.new
   end
 
-  def ask(cookie_name, output_path: OUTPUT_PATH)
-    p "#{Time.now}"
-
+  def extract(cookie_name, output_path: OUTPUT_PATH)
     @agent.get(@url)
     @agent.cookies
         .select { |c| c.name == cookie_name }
@@ -18,10 +16,11 @@ class Cookie
         .map{ |e| e.to_s }
   end
 
-  def ask_until_get(number, cookie_name, output_path: OUTPUT_PATH)
+  def extract_until_get(number, cookie_name, output_path: OUTPUT_PATH)
     counter = 0
     until number == counter
-      res = ask(cookie_name, output_path: output_path)
+      p "#{Time.now.to_f}"
+      res = extract(cookie_name, output_path: output_path)
       counter += 1 unless res.empty?
       sleep(0.03)
     end
@@ -32,6 +31,6 @@ class Cookie
 
   def write_file(path, cookie)
     p cookie.to_s
-    File.write("#{path}/cookie_#{rand(10000)}", cookie.to_s)
+    File.write("#{path}/cookie_#{Time.now.to_f}", cookie.to_s)
   end
 end
