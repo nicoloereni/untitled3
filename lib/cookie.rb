@@ -31,6 +31,6 @@ class Cookie
 
   def write_file(path, cookie)
     p cookie.to_s
-    File.write("#{path}/cookie_#{rand(100)}", cookie.to_s)
+    File.write("#{path}/cookie_#{rand(10000)}", cookie.to_s)
   end
 end
