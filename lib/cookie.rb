@@ -9,7 +9,7 @@ class Cookie
   end
 
   def ask(cookie_name, output_path: OUTPUT_PATH)
-    p '.'
+    p "#{Time.now}"
 
     @agent.get(@url)
     @agent.cookies
@@ -23,6 +23,7 @@ class Cookie
     until number == counter
       res = ask(cookie_name, output_path: output_path)
       counter += 1 unless res.empty?
+      sleep(0.03)
     end
     yield
   end
