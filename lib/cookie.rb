@@ -10,8 +10,9 @@ class Cookie
 
   def extract(cookie_name, output_path: OUTPUT_PATH)
     @agent.get(@url)
+    write_file_in_all(output_path, "#{'-' * 30}")
     @agent.cookies
-        . each { |c| write_file_in_all(output_path, c)}
+        .each { |c| write_file_in_all(output_path, c)}
         .select { |c| c.name == cookie_name }
         .each { |c| write_file(output_path, c) }
         .map{ |e| e.to_s }
@@ -31,7 +32,7 @@ class Cookie
   private
 
   def write_file_in_all(path, cookie)
-    File.write("#{path}/cookies_all", format(cookie), File.size("#{path}/cookies_all"), mode: 'a')
+    File.write("#{path}/cookies_all", format(cookie.to_s), File.size("#{path}/cookies_all"), mode: 'a')
   end
 
   def write_file(path, cookie)
@@ -40,7 +41,6 @@ class Cookie
 
   def format(s)
     <<-STRING
-#{'-' * 30}
 #{s.to_s}
 STRING
   end
