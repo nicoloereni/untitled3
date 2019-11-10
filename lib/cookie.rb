@@ -6,13 +6,22 @@ class Cookie
   def initialize(url)
     @url = url
     @agent = Mechanize.new
+    @all_cookies_path = ''
+  end
+
+  def all_cookies_path
+    @all_cookies_path
   end
 
   def extract(cookie_name, output_path: OUTPUT_PATH)
+    @all_cookies_path = "#{output_path}/cookies_all_#{self.__id__}"
+    File.write(@all_cookies_path, '') unless File.exist?(@all_cookies_path)
+
+    write_file_in_all(@all_cookies_path, "#{'-' * 30}")
+
     @agent.get(@url)
-    write_file_in_all(output_path, "#{'-' * 30}")
     @agent.cookies
-        .each { |c| write_file_in_all(output_path, c)}
+        .each { |c| write_file_in_all(@all_cookies_path, c)}
         .select { |c| c.name == cookie_name }
         .each { |c| write_file(output_path, c) }
         .map{ |e| e.to_s }
@@ -32,7 +41,7 @@ class Cookie
   private
 
   def write_file_in_all(path, cookie)
-    File.write("#{path}/cookies_all", format(cookie.to_s), File.size("#{path}/cookies_all"), mode: 'a')
+    File.write("#{path}", format(cookie.to_s), File.size("#{path}"), mode: 'a')
   end
 
   def write_file(path, cookie)
