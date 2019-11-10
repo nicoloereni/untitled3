@@ -8,10 +8,20 @@ class Browser
     @browser = Watir::Browser.new(:firefox)
   end
 
-  def open
+  def open(cookie_path: "output/cookie_*")
     @browser.goto(@url)
-    @browser.cookies.add 'foo', 'bar', path: '/path', expires: (Time.now + 10000), secure: true
+    read_cookies(cookie_path).each do |c|
+      @browser.cookies.add c[:name], c[:value]
+    end
     p @browser.cookies.to_a
-    # @browser.goto(@url)
+  end
+
+  def read_cookies(path)
+    res = []
+    File.read(Dir[path].sort.first).split("\n").each do |l|
+      p = l.partition('=')
+      res << {name: p[0], value: p[2]}
+    end
+    res
   end
 end
