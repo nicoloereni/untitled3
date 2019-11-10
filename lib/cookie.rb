@@ -22,7 +22,7 @@ class Cookie
       p "#{Time.now.to_f}"
       res = extract(cookie_name, output_path: output_path)
       counter += 1 unless res.empty?
-      sleep(0.03)
+      sleep(0.01)
     end
     yield
   end

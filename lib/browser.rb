@@ -10,5 +10,8 @@ class Browser
 
   def open
     @browser.goto(@url)
+    @browser.cookies.add 'foo', 'bar', path: '/path', expires: (Time.now + 10000), secure: true
+    p @browser.cookies.to_a
+    # @browser.goto(@url)
   end
 end
