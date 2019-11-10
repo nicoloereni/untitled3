@@ -8,11 +8,13 @@ class CookieTest < Test::Unit::TestCase
 
   test 'extract' do
     Dir.mktmpdir do |tmpdir|
+      File.write("#{tmpdir}/cookies_all", '')
+
       cookie_name = 'intro_seen_36c3'
       res = @cookie.extract(cookie_name, output_path: tmpdir)
 
       assert_equal(['intro_seen_36c3=true'], res)
-      assert_equal(1, Dir[tmpdir].count)
+      assert_equal(2, Dir["#{tmpdir}/*"].count)
       Dir["#{tmpdir}/*"].each do |f|
         assert_equal(true, File.read("#{f}").include?(cookie_name))
       end
@@ -25,8 +27,11 @@ class CookieTest < Test::Unit::TestCase
 
   test 'extract until get 3 results' do
     Dir.mktmpdir do |tmpdir|
+      File.write("#{tmpdir}/cookies_all", '')
       @cookie.extract_until_get(3, 'intro_seen_36c3', output_path: tmpdir) do
-        assert_equal(3, Dir["#{tmpdir}/*"].count)
+        assert_equal(4, Dir["#{tmpdir}/*"].count)
+        assert_equal("------------------------------\nintro_seen_36c3=true\n------------------------------\nintro_seen_36c3=true\n------------------------------\nintro_seen_36c3=true\n",
+                     File.read("#{tmpdir}/cookies_all"))
       end
     end
   end

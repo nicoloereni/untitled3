@@ -30,7 +30,14 @@ class Cookie
   private
 
   def write_file(path, cookie)
-    p cookie.to_s
+    File.write("#{path}/cookies_all", format(cookie), File.size("#{path}/cookies_all"), mode: 'a')
     File.write("#{path}/cookie_#{Time.now.to_f}", cookie.to_s)
+  end
+
+  def format(s)
+    <<-STRING
+#{'-' * 30}
+#{s.to_s}
+STRING
   end
 end
