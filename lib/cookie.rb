@@ -11,6 +11,7 @@ class Cookie
   def extract(cookie_name, output_path: OUTPUT_PATH)
     @agent.get(@url)
     @agent.cookies
+        . each { |c| write_file_in_all(output_path, c)}
         .select { |c| c.name == cookie_name }
         .each { |c| write_file(output_path, c) }
         .map{ |e| e.to_s }
@@ -29,8 +30,11 @@ class Cookie
 
   private
 
-  def write_file(path, cookie)
+  def write_file_in_all(path, cookie)
     File.write("#{path}/cookies_all", format(cookie), File.size("#{path}/cookies_all"), mode: 'a')
+  end
+
+  def write_file(path, cookie)
     File.write("#{path}/cookie_#{Time.now.to_f}", cookie.to_s)
   end
 

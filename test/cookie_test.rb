@@ -30,8 +30,9 @@ class CookieTest < Test::Unit::TestCase
       File.write("#{tmpdir}/cookies_all", '')
       @cookie.extract_until_get(3, 'intro_seen_36c3', output_path: tmpdir) do
         assert_equal(4, Dir["#{tmpdir}/*"].count)
-        assert_equal("------------------------------\nintro_seen_36c3=true\n------------------------------\nintro_seen_36c3=true\n------------------------------\nintro_seen_36c3=true\n",
-                     File.read("#{tmpdir}/cookies_all"))
+        assert_equal(
+            true,
+            File.read("#{tmpdir}/cookies_all").include?('intro_seen_36c3=true'))
       end
     end
   end
